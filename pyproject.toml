@@ -1,0 +1,30 @@
+# PyPI packaging for Raspberry Pi / Linux (CPython). MicroPython boards install
+# via mip (package.json), which ships only protocentral_tla20xx.py.
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "protocentral-tla20xx"
+version = "1.0.0"
+description = "MicroPython + Raspberry Pi driver for the ProtoCentral TLA2022/TLA2024 12-bit I2C ADC breakout"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "ProtoCentral Electronics", email = "info@protocentral.com" }]
+keywords = ["tla2024", "tla2022", "adc", "i2c", "raspberry-pi", "micropython", "sensor", "protocentral"]
+dependencies = ["smbus2>=0.4; platform_system == 'Linux'"]
+
+[project.urls]
+Homepage = "https://protocentral.com"
+Source = "https://github.com/Protocentral/protocentral-micropython-tla20xx"
+
+[tool.hatch.build.targets.wheel]
+include = ["protocentral_tla20xx.py", "protocentral_tla20xx_linux.py"]
+
+[tool.hatch.build.targets.sdist]
+include = ["protocentral_tla20xx.py", "protocentral_tla20xx_linux.py", "examples", "tests", "README.md", "LICENSE.md"]
+
+[tool.ruff]
+line-length = 100
