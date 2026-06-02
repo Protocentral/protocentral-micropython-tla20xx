@@ -35,13 +35,13 @@ class FakeI2C:
 
 def test_begin_writes_default_word():
     bus = FakeI2C()
-    TLA20XX(bus).begin()
+    TLA20XX(bus, 0x48).begin()
     assert bus.writes[-1] == (_REG_CONFIG, 0x8683), hex(bus.writes[-1][1])
 
 
 def test_config_word():
     bus = FakeI2C()
-    adc = TLA20XX(bus)
+    adc = TLA20XX(bus, 0x48)
     adc.set_mux(MUX_AIN0_GND)      # 4
     adc.set_fsr(FSR_2_048V)        # 2
     adc.set_dr(DR_128SPS)          # 0
@@ -52,21 +52,21 @@ def test_config_word():
 
 def test_read_adc_raw_positive():
     bus = FakeI2C()
-    adc = TLA20XX(bus)
+    adc = TLA20XX(bus, 0x48)
     bus.store(_REG_CONVERSION, 100 << 4)   # conv reg = code << 4
     assert adc.read_adc() == 100
 
 
 def test_read_adc_raw_negative():
     bus = FakeI2C()
-    adc = TLA20XX(bus)
+    adc = TLA20XX(bus, 0x48)
     bus.store(_REG_CONVERSION, 0xFFF0)     # code -1
     assert adc.read_adc() == -1
 
 
 def test_read_voltage_scaling():
     bus = FakeI2C()
-    adc = TLA20XX(bus)
+    adc = TLA20XX(bus, 0x48)
     bus.store(_REG_CONVERSION, 100 << 4)
     adc.set_fsr(FSR_2_048V)                # 1 mV / count
     assert math.isclose(adc.read_voltage(), 100.0, rel_tol=1e-9)
@@ -117,7 +117,7 @@ def test_pi_shim_parity():
 
     backend = _SMBus(1)
     backend.regfile[_REG_CONVERSION] = bytes([0x06, 0x40])   # code 100
-    adc = TLA20XX(shim.I2C(bus=backend))
+    adc = TLA20XX(shim.I2C(bus=backend), 0x48)
     assert adc.read_adc() == 100
 
 

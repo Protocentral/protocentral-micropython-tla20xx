@@ -17,7 +17,7 @@ Present: driver, Pi shim, examples (`simpletest`, `4channel_scan`, `raspberrypi`
 ## Reconciled against the Arduino source (header + .cpp)
 
 Confirmed from `src/protocentral_TLA20xx.{h,cpp}` (fully read):
-- I2C address **`0x49`** ✓
+- I2C address: Arduino source hardcodes `0x49`; this driver takes `address` as a required constructor arg instead (set per the ADDR strap, `0x48` board default) ✓
 - Registers: CONV `0x00`, CONF `0x01`; 16-bit big-endian I/O ✓
 - Methods: `begin()`, `read_adc()`, `setFSR()`, `setMode()`, `setDR()`, `setMux()` — mirrored 1:1 as `begin`/`read_adc`/`set_fsr`/`set_mode`/`set_dr`/`set_mux`.
 - **`read_adc()` returns the RAW signed 12-bit code** (`(int16_t)conv >> 4`), **not** volts. Mirrored exactly; added `read_voltage()` as a MicroPython-only convenience (mV via current FSR).

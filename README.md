@@ -11,7 +11,7 @@ MicroPython library for the ProtoCentral TLA20xx breakout — a TI **TLA2024 / T
 - Programmable gain / full-scale range from ±6.144 V down to ±0.256 V
 - Selectable data rate, 128 SPS to 3300 SPS
 - Continuous and single-shot conversion modes
-- I²C interface, default address `0x49`
+- I²C interface, default address `0x48`
 - Qwiic / STEMMA QT connector for solder-free wiring
 - One driver for MicroPython **and** Raspberry Pi / Linux
 
@@ -32,12 +32,12 @@ Or copy [`protocentral_tla20xx.py`](protocentral_tla20xx.py) to the board manual
 ```bash
 sudo raspi-config            # Interface Options -> enable I2C
 pip install protocentral-tla20xx
-i2cdetect -y 1               # confirm the ADC shows up at 0x49
+i2cdetect -y 1               # confirm the ADC shows up at 0x48
 ```
 
 ## Hardware Setup
 
-The board uses I²C. Connect power, ground, and the two I²C lines; the default address is `0x49` (ADDR strap: GND→`0x48`, VDD→`0x49`, SDA→`0x4A`, SCL→`0x4B`). Analog inputs are AIN0–AIN3.
+The board uses I²C. Connect power, ground, and the two I²C lines; the default address is `0x48` (ADDR strap: GND→`0x48`, VDD→`0x49`, SDA→`0x4A`, SCL→`0x4B`). Set the address in your own script to match the strap. Analog inputs are AIN0–AIN3.
 
 ### Raspberry Pi Pico (MicroPython)
 
@@ -76,7 +76,9 @@ from machine import Pin, I2C
 from protocentral_tla20xx import TLA20XX, MUX_AIN0_GND, FSR_2_048V, DR_128SPS, OP_CONTINUOUS
 
 i2c = I2C(0, scl=Pin(5), sda=Pin(4), freq=400000)   # set pins for your board
-adc = TLA20XX(i2c)
+
+TLA20XX_I2C_ADDR = 0x48        # ADDR strap: GND=0x48, VDD=0x49, SDA=0x4A, SCL=0x4B
+adc = TLA20XX(i2c, TLA20XX_I2C_ADDR)
 adc.begin()
 adc.set_mode(OP_CONTINUOUS)
 adc.set_dr(DR_128SPS)
@@ -97,8 +99,10 @@ import time
 from protocentral_tla20xx_linux import I2C
 from protocentral_tla20xx import TLA20XX, MUX_AIN0_GND, FSR_2_048V, DR_128SPS, OP_CONTINUOUS
 
+TLA20XX_I2C_ADDR = 0x48        # ADDR strap: GND=0x48, VDD=0x49, SDA=0x4A, SCL=0x4B
+
 with I2C(bus=1) as i2c:
-    adc = TLA20XX(i2c)
+    adc = TLA20XX(i2c, TLA20XX_I2C_ADDR)
     adc.begin()
     adc.set_mode(OP_CONTINUOUS)
     adc.set_dr(DR_128SPS)
@@ -115,7 +119,7 @@ with I2C(bus=1) as i2c:
 
 | Constructor | Description |
 |---|---|
-| `TLA20XX(i2c, address=0x49)` | Create an ADC on a `machine.I2C` (or Pi shim) bus, optional I2C address |
+| `TLA20XX(i2c, address)` | Create an ADC on a `machine.I2C` (or Pi shim) bus; `address` set by the ADDR strap (0x48 default) |
 
 ### Methods
 

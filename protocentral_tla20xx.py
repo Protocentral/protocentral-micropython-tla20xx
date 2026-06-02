@@ -18,8 +18,9 @@ _REG_CONVERSION = 0x00
 _REG_CONFIG = 0x01
 
 # ----------------------------------------------------------------- I2C address
-# ADDR -> GND=0x48, VDD=0x49 (ProtoCentral board default), SDA=0x4A, SCL=0x4B.
-TLA20XX_I2C_ADDR = 0x49
+# The address is not baked into the driver — pass it from your own script, since
+# it depends on the board's ADDR strap:
+#   GND -> 0x48 (board default), VDD -> 0x49, SDA -> 0x4A, SCL -> 0x4B.
 
 # ----------------------------------------------------------------- constants (mirror Arduino enums)
 # Data rate [7:5]
@@ -70,7 +71,7 @@ class TLA20XX:
         from machine import Pin, I2C
         from protocentral_tla20xx import TLA20XX, MUX_AIN0_GND, FSR_2_048V, DR_128SPS, OP_CONTINUOUS
         i2c = I2C(0, scl=Pin(5), sda=Pin(4))
-        adc = TLA20XX(i2c)            # 0x49 by default
+        adc = TLA20XX(i2c, 0x48)      # ADDR strap: GND=0x48, VDD=0x49, SDA=0x4A, SCL=0x4B
         adc.begin()
         adc.set_mode(OP_CONTINUOUS)
         adc.set_dr(DR_128SPS)
@@ -80,7 +81,7 @@ class TLA20XX:
         print(adc.read_voltage())     # convenience: millivolts
     """
 
-    def __init__(self, i2c, address=TLA20XX_I2C_ADDR):
+    def __init__(self, i2c, address):
         self.i2c = i2c
         self.address = address
         # defaults matching the Arduino begin() word 0x8683

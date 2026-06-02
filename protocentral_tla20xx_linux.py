@@ -7,7 +7,7 @@ Implements the `machine.I2C` subset the driver uses (`readfrom_mem` /
 
     from protocentral_tla20xx_linux import I2C
     from protocentral_tla20xx import TLA20XX
-    adc = TLA20XX(I2C(bus=1)); adc.begin()
+    adc = TLA20XX(I2C(bus=1), 0x48); adc.begin()
     print(adc.read(), "mV")
 """
 

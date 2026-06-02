@@ -11,7 +11,8 @@ from protocentral_tla20xx import (
 
 i2c = I2C(0, scl=Pin(5), sda=Pin(4), freq=400000)
 
-adc = TLA20XX(i2c)
+TLA20XX_I2C_ADDR = 0x48        # ADDR strap: GND=0x48, VDD=0x49, SDA=0x4A, SCL=0x4B
+adc = TLA20XX(i2c, TLA20XX_I2C_ADDR)
 adc.begin()
 adc.set_mode(OP_CONTINUOUS)
 adc.set_dr(DR_3300SPS)
