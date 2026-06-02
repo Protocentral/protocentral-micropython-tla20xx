@@ -39,6 +39,17 @@ i2cdetect -y 1               # confirm the ADC shows up at 0x48
 
 The board uses I²C. Connect power, ground, and the two I²C lines; the default address is `0x48` (ADDR strap: GND→`0x48`, VDD→`0x49`, SDA→`0x4A`, SCL→`0x4B`). Set the address in your own script to match the strap. Analog inputs are AIN0–AIN3.
 
+### Adafruit QT Py ESP32-C3 (MicroPython)
+
+The examples default to this board — plug the breakout into the STEMMA QT / Qwiic connector for solder-free wiring, or wire it by hand:
+
+| TLA20xx Pin | QT Py C3 Pin | Notes |
+|---|---|---|
+| VIN | 3V3 | 3.3 V supply |
+| GND | GND | Ground |
+| SDA | GPIO5 | I2C SDA |
+| SCL | GPIO6 | I2C SCL |
+
 ### Raspberry Pi Pico (MicroPython)
 
 | TLA20xx Pin | Pico Pin | Notes |
@@ -75,7 +86,7 @@ import time
 from machine import Pin, I2C
 from protocentral_tla20xx import TLA20XX, MUX_AIN0_GND, FSR_2_048V, DR_128SPS, OP_CONTINUOUS
 
-i2c = I2C(0, scl=Pin(5), sda=Pin(4), freq=400000)   # set pins for your board
+i2c = I2C(0, scl=Pin(6), sda=Pin(5), freq=400000)   # Adafruit QT Py ESP32-C3; set pins for your board
 
 TLA20XX_I2C_ADDR = 0x48        # ADDR strap: GND=0x48, VDD=0x49, SDA=0x4A, SCL=0x4B
 adc = TLA20XX(i2c, TLA20XX_I2C_ADDR)

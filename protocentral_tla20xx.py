@@ -70,7 +70,7 @@ class TLA20XX:
     Example:
         from machine import Pin, I2C
         from protocentral_tla20xx import TLA20XX, MUX_AIN0_GND, FSR_2_048V, DR_128SPS, OP_CONTINUOUS
-        i2c = I2C(0, scl=Pin(5), sda=Pin(4))
+        i2c = I2C(0, scl=Pin(6), sda=Pin(5))   # Adafruit QT Py ESP32-C3
         adc = TLA20XX(i2c, 0x48)      # ADDR strap: GND=0x48, VDD=0x49, SDA=0x4A, SCL=0x4B
         adc.begin()
         adc.set_mode(OP_CONTINUOUS)

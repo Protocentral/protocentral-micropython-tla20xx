@@ -8,7 +8,7 @@ from protocentral_tla20xx import (
     TLA20XX, MUX_AIN0_GND, FSR_2_048V, DR_128SPS, OP_CONTINUOUS,
 )
 
-i2c = I2C(0, scl=Pin(5), sda=Pin(4), freq=400000)   # set pins for your board
+i2c = I2C(0, scl=Pin(6), sda=Pin(5), freq=400000)   # Adafruit QT Py ESP32-C3; set pins for your board
 
 TLA20XX_I2C_ADDR = 0x48        # ADDR strap: GND=0x48, VDD=0x49, SDA=0x4A, SCL=0x4B
 adc = TLA20XX(i2c, TLA20XX_I2C_ADDR)
